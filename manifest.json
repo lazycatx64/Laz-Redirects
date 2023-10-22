@@ -3,21 +3,27 @@
     "name": "Laz Redirects",
     "version": "1.0",
     "description": "Redirects Pixiv links to Kemono Party",
-    "permissions": ["activeTab"],
+    "permissions": [
+        "activeTab",
+        "*://pixiv.net/*",
+        "*://fantia.jp/*",
+        "*://kemono.party/*"
+    ],
     "browser_action": {
-      "default_icon": {
+        "default_icon": {
+            "16": "images/icon16.png",
+            "48": "images/icon48.png",
+            "128": "images/icon128.png"
+        }
+    },
+    "icons": {
         "16": "images/icon16.png",
         "48": "images/icon48.png",
         "128": "images/icon128.png"
-      }
-    },
-    "icons": {
-      "16": "images/icon16.png",
-      "48": "images/icon48.png",
-      "128": "images/icon128.png"
     },
     "background": {
-      "scripts": ["background.js"]
+        "scripts": [
+            "background.js"
+        ]
     }
-  }
-  
+}
