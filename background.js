@@ -1,14 +1,31 @@
 
-console.log("[Laz][Background] Background script!");
+console.log( "[LazRedirect][Background] Background script!" );
 
-chrome.browserAction.onClicked.addListener(function(tab) {
-    console.log("[Laz][Background] Clicked!");
-    
-    chrome.tabs.executeScript(tab.id, {
+chrome.browserAction.setBadgeText({ text: 'nom' });
+
+chrome.browserAction.onClicked.addListener( function( tab ) {
+
+    chrome.tabs.executeScript( tab.id, {
         file: "script.js"
     });
+
 });
-chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-    // 更新图标标记
-    chrome.browserAction.setBadgeText({ text: message.badgeText });
+
+chrome.runtime.onMessage.addListener( function ( message, sender, sendResponse ) {
+
+    chrome.browserAction.setBadgeText({ 
+        text: message.badgeText 
+    });
+
+});
+
+// Page update status test
+chrome.tabs.onUpdated.addListener( function( tabId, changeInfo, tab ) {
+
+    console.log( "[LazRedirect][Background] Page status: " + changeInfo.status )
+
+    if ( changeInfo.status === 'complete' ) {
+        console.log( "[LazRedirect][Background] Page loaded completely: " + tab.url );
+    }
+
 });

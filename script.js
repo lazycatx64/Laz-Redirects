@@ -1,102 +1,199 @@
 
 
 var curTab = window.location.href
+console.log( "[LazRedirect][Script] current url = " + curTab )
 
-chrome.runtime.sendMessage({ badgeText: '42' });
+// chrome.runtime.sendMessage({ badgeText: '42' })
 
-function searchFantia() {
+var kemonoUrl = "https://kemono.su"
+
+var fantiaFanclubUrl = /https?:\/\/fantia\.jp\/fanclubs/
+var fantiaPostUrl = /https?:\/\/fantia\.jp\/posts\/\d+/
+
+
+function openInNewTab( url ) {
+
+    var stackTrace = new Error().stack.split("\n");
+    var callerLine = stackTrace[2].trim(); // 获取调用行
+    console.log("[LazRedirect][Script] Opening Url: " + url);
+    console.log("[LazRedirect][Script] Called from: " + callerLine);
+    window.open( url, "_blank" )
+
+}
+
+
+function searchFantiaDiv() {
     
-    var divElements = document.querySelectorAll("div");
+    var divElements = document.querySelectorAll( "div" )
 
-    var fantiaFanclub = /https:\/\/fantia\.jp\/fanclubs/g;
-    var fantiaPost = /https:\/\/fantia\.jp\/posts/g;
+    for ( var i = 0; i < divElements.length; i++ ) {
+        var divText = divElements[i].textContent || divElements[i].innerText
 
-    for (var i = 0; i < divElements.length; i++) {
-        var divText = divElements[i].textContent || divElements[i].innerText;
+        var fanclubs = divText.match( fantiaFanclubUrl )
+        if ( fanclubs ) {
 
-        var isFanclub = divText.match(fantiaFanclub);
-        if (isFanclub) {
-
-            var fantiaUser = isFanclub[0].match(/\d+/);
-            fantiaUser = "https://kemono.party/fantia/user/" + fantiaUser
-            window.open(fantiaUser, "_blank");
-            break;
+            var fanclubId = fanclubs[0].match(/\d+/)
+            fanclubId = kemonoUrl + "/fantia/user/" + fanclubId
+            openInNewTab( fanclubId )
+            break
         }
         
-        var isPost = divText.match(fantiaPost);
-        if (isPost) {
+        var posts = divText.match( fantiaPostUrl )
+        if ( posts ) {
 
-            var firstMatch = isPost[0];
-
-            window.open(firstMatch, "_blank");
-            break;
+            openInNewTab( posts[0] )
+            break
         }
     }
     
-    // var urlPattern = /https:\/\/fantia\.jp\S+/;
-
-    // var links = querySelectorAll("a");
-
-    // for (var j = 0; j < links.length; j++) {
-    //     var link = links[j];
-    //     var linkHref = link.getAttribute("href");
-
-    //     if (linkHref && urlPattern.test(linkHref)) {
-    //         window.open(linkHref, "_blank");
-    //         return;
-    //     }
-    // }
-
-
 }
 
-// function searchFantia() {
+function searchFantiaLinkFull() {
     
-//     var divElements = document.querySelectorAll("div");
+    var userLink = document.querySelector( "a[href*='fantia.jp/fanclubs']" )
+    if ( userLink ) {
+        var match = userLink.href.match( /\d+/ ) 
+        if ( match && match.length > 0 ) {
+            var userId = match[0]
+            var newUrl = kemonoUrl + "/fantia/user/" + userId
 
-//     var urlPattern = /https:\/\/fantia\.jp\S+/g;
-
-//     for (var i = 0; i < divElements.length; i++) {
-//         var divText = divElements[i].textContent || divElements[i].innerText;
-
-//         var matches = divText.match(urlPattern);
-//         if (matches) {
-
-//             var firstMatch = matches[0];
-
-//             window.open(firstMatch, "_blank");
-//             break;
-
-//         }
-//     }
-// }
-
-function searchFanbox() {
+            openInNewTab( newUrl )
+        }
+    }
     
-    var userLink = document.querySelector("a[href^='/users/'], a[href^='/en/users/']");
-    if (userLink) {
-        var match = userLink.href.match(/\d+/);
-        if (match && match.length > 0) {
-            var userId = match[0];
-            var newURL = "https://kemono.party/fanbox/user/" + userId;
+}
 
-            window.open(newURL, "_blank");
+function searchFanboxLink() {
+    
+    var userLink = document.querySelector( "a[href^='/users/'], a[href^='/en/users/']" )
+    if ( userLink ) {
+        var match = userLink.href.match( /\d+/ ) 
+        if ( match && match.length > 0 ) {
+            var userId = match[0]
+            var newUrl = kemonoUrl + "/fanbox/user/" + userId
+
+            openInNewTab( newUrl )
         }
     }
 }
 
-////////// Pixiv artist page //////////
-if ( curTab.match( /pixiv\.net(\/en|)\/users/ ) ) {
+function searchFanboxLinkFull() {
+    
+    var userLink = document.querySelector( "a[href^='https://www.pixiv.net/users/']" )
+    if ( userLink ) {
+        var match = userLink.href.match( /\d+/ ) 
+        if ( match && match.length > 0 ) {
+            var userId = match[0]
+            var newUrl = kemonoUrl + "/fanbox/user/" + userId
 
-    searchFantia();
-    searchFanbox();
+            openInNewTab( newUrl )
+        }
+    }
+}
+
+function searchDLSite() {
+    
+    var match = curTab.match( /RG\d+/ )
+    if ( match && match.length > 0 ) {
+        var circleId = match[0]
+        var newUrl = kemonoUrl + "/dlsite/user/" + circleId
+
+        openInNewTab( newUrl )
+    }
+
+}
+
+////////// Pixiv to kemono //////////
+if ( curTab.match( /pixiv\.net(\/en|)\/users/ ) || curTab.match( /pixiv\.net(\/en|)\/artworks/ ) ) {
+    
+    console.log( "[LazRedirect][Script] matched pixiv" )
+
+    searchFantiaDiv()
+    searchFanboxLink()
 } 
 
-////////// Pixiv art page //////////
-if ( curTab.match( /pixiv\.net(\/en|)\/artworks/ ) ) {
+////////// Fanbox to kemono //////////
+if ( curTab.match( /\S+\.fanbox\.cc/ ) ) {
     
-    searchFantia();
-    searchFanbox();
+    console.log( "[LazRedirect][Script] matched fanbox" )
+
+    searchFantiaLinkFull()
+    searchFanboxLinkFull()
+
+} 
+
+
+////////// DLsite circle to kemono //////////
+if ( curTab.match( /dlsite\.com\/.*\/maker_id\/RG\d+/ ) ) {
+
+    console.log( "[LazRedirect][Script] matched dlsite" )
+
+    searchDLSite()
+
+} 
+
+////////// Patreon to kemono //////////
+if ( curTab.match( /patreon\.com\/\S+/ ) ) {
+
+    console.log( "[LazRedirect][Script] matched patreon" )
+    
+    // var match = curTab.match( /\d+/)
+    // if ( match && match.length > 0 ) {
+    //     var userId = match[0]
+    //     var newUrl = kemonoUrl + "/patreon/user/" + userId
+
+    //     openInNewTab( newUrl )
+    // }
+
+    var match = document.querySelector( 'script#__NEXT_DATA__' ).innerText.match( /\/api\/user\/(\d+)/ )
+    if ( match && match.length > 0 ) {
+        var userId = match[1]
+        var newUrl = kemonoUrl + "/patreon/user/" + userId
+        
+        openInNewTab( newUrl )
+
+    }
+
+} 
+
+////////// Fantia to Pixiv //////////
+if ( curTab.match( /fantia\.jp\/(fanclubs|posts)\/\d+/ ) || curTab.match( /fantia\.jp\/\S+(\/|)/ ) ) {
+    
+    console.log( "[LazRedirect][Script] matched fantia" )
+
+    var userLink = document.querySelector( "a[href^='/fanclubs/']" )
+    if ( userLink ) {
+        var match = userLink.href.match( /\d+/ )
+        if ( match && match.length > 0 ) {
+            var userId = match[0]
+            var newUrl = kemonoUrl + "/fantia/user/" + userId
+
+            openInNewTab( newUrl )
+        }
+    }
+
+
+
+} 
+
+////////// Facebook user to post search //////////
+if ( curTab.match( /facebook\.com/ ) ) {
+    
+    console.log( "[LazRedirect][Script] matched facebook" )
+
+    var userLink = document.querySelector( "a[href^='/photo/?fbid=']" )
+    if ( userLink ) {
+        var match = userLink.href.match( /ecnf.(\d+)/ )
+        if ( match && match.length > 1 ) {
+            var userId = match[1]
+            var newUrl = "https://facebook.com/profile/" + userId + "/search/?q=."
+
+            openInNewTab( newUrl )
+        }
+    }
+
+
+
 } 
 
 

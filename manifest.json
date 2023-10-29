@@ -2,12 +2,15 @@
     "manifest_version": 2,
     "name": "Laz Redirects",
     "version": "1.0",
-    "description": "Redirects Pixiv links to Kemono Party",
+    "description": "Redirects links to Kemono Party",
     "permissions": [
-        "activeTab",
-        "*://pixiv.net/*",
-        "*://fantia.jp/*",
-        "*://kemono.party/*"
+        "*://*.pixiv.net/*",
+        "*://*.fantia.jp/*",
+        "*://*.fanbox.cc/*",
+        "*://*.patreon.com/*",
+        "*://*.kemono.party/*",
+        "*://*.kemono.su/*",
+        "*://*.facebook.com/*"
     ],
     "browser_action": {
         "default_icon": {
