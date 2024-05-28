@@ -10,6 +10,7 @@
         "*://*.patreon.com/*",
         "*://*.kemono.party/*",
         "*://*.kemono.su/*",
+        "*://*.dlsite.com/*",
         "*://*.facebook.com/*"
     ],
     "browser_action": {

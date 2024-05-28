@@ -22,12 +22,28 @@ function openInNewTab( url ) {
 }
 
 
+function searchGelDiv() {
+    
+    const liElem = document.querySelector( '.tag-type-artist' )
+    if (!liElem)
+        return
+
+    const aElem = liElem.querySelectorAll('a')
+    if (!aElem)
+        return
+
+    const artist = aElem[1].innerText
+
+    openInNewTab( 'https://danbooru.donmai.us/artists?commit=Search&search[any_name_matches]=' + artist )
+
+}
+
 function searchFantiaDiv() {
     
     var divElements = document.querySelectorAll( "div" )
 
     for ( var i = 0; i < divElements.length; i++ ) {
-        var divText = divElements[i].textContent || divElements[i].innerText
+        var divText = divElements[i].innerText
 
         var fanclubs = divText.match( fantiaFanclubUrl )
         if ( fanclubs ) {
@@ -102,6 +118,15 @@ function searchDLSite() {
     }
 
 }
+https://gelbooru.com/index.php?page=post&s=view&id=10106480
+////////// Gel to Danbooru wiki //////////
+if ( curTab.match( /gelbooru\.com\/index\.php\?page=post.*&id=(\d+)/ ) || curTab.match( /pixiv\.net(\/en|)\/artworks/ ) ) {
+    
+    console.log( "[LazRedirect][Script] matched pixiv" )
+
+    searchFantiaDiv()
+    searchFanboxLink()
+} 
 
 ////////// Pixiv to kemono //////////
 if ( curTab.match( /pixiv\.net(\/en|)\/users/ ) || curTab.match( /pixiv\.net(\/en|)\/artworks/ ) ) {
@@ -179,21 +204,56 @@ if ( curTab.match( /fantia\.jp\/(fanclubs|posts)\/\d+/ ) || curTab.match( /fanti
 ////////// Facebook user to post search //////////
 if ( curTab.match( /facebook\.com/ ) ) {
     
-    console.log( "[LazRedirect][Script] matched facebook" )
+    console.log( "[LazRedirect][Script] matched facebook: " + curTab )
 
-    var userLink = document.querySelector( "a[href^='/photo/?fbid=']" )
-    if ( userLink ) {
-        var match = userLink.href.match( /ecnf.(\d+)/ )
-        if ( match && match.length > 1 ) {
-            var userId = match[1]
-            var newUrl = "https://facebook.com/profile/" + userId + "/search/?q=."
+
+    // 社團成員
+    if ( curTab.match( /facebook\.com\/groups\/\d+\/user\/\d+/ ) ) {
+        console.log( "[LazRedirect][Script] group user /facebook\.com\/groups\/\d+\/user\/d+/" )
+
+        var userId = curTab.match( /groups\/\d+\/user\/(\d+)/ )[1]
+        if ( userId && userId.length > 1 ) {
+            
+            var newUrl = "https://facebook.com/profile/" + userId + "/search/?q=檢舉"
 
             openInNewTab( newUrl )
         }
+
+    } else if ( curTab.match( /facebook\.com\/profile\.php\?id/ ) ) {
+        console.log( "[LazRedirect][Script] /facebook\.com\/profile\.php\?id/" )
+    
+        var userId = curTab.match( /profile\.php\?id\=(\d+)/ )[1]
+        if ( userId && userId.length > 1 ) {
+            
+            var newUrl = "https://facebook.com/profile/" + userId + "/search/?q=檢舉"
+
+            openInNewTab( newUrl )
+        }
+
+    } else if ( curTab.match( /facebook\.com\/[a-zA-Z0-9_\.]+$/ ) ) {
+        console.log( "[LazRedirect][Script] /facebook\.com\/[a-zA-Z0-9_\.]+$/" )
+        var userId = curTab.match( /facebook\.com\/([a-zA-Z0-9_\.]+)$/ )[1]
+        if ( userId && userId.length > 1 ) {
+            
+            var newUrl = "https://facebook.com/profile/" + userId + "/search/?q=檢舉"
+
+            openInNewTab( newUrl )
+        }
+
+    } else {
+        var userLink = document.querySelector( "a[href^='/photo/?fbid=']" )
+        console.log( "[LazRedirect][Script] a[href^='/photo/?fbid=']" )
+        if ( userLink ) {
+            var match = userLink.href.match( /ecnf.(\d+)/ )
+            if ( match && match.length > 1 ) {
+                var userId = match[1]
+                var newUrl = "https://facebook.com/profile/" + userId + "/search/?q=檢舉"
+    
+                openInNewTab( newUrl )
+            }
+        }
+
     }
-
-
-
 } 
 
 
