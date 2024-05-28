@@ -37,6 +37,21 @@ function searchGelDiv() {
     openInNewTab( 'https://danbooru.donmai.us/artists?commit=Search&search[any_name_matches]=' + artist )
 
 }
+function searchDanWiki() {
+    // document.querySelector( 'div[id^=c-artists]' ).querySelector( 'a' ).innerText
+    const divElem = document.querySelector( 'div[id^=c-artists]' )
+    if (!divElem)
+        return
+
+    const aElem = divElem.querySelector('a')
+    if (!aElem)
+        return
+
+    const artist = aElem.innerText.replace( ' ', '_' )
+
+    openInNewTab( 'https://gelbooru.com/index.php?page=post&s=list&tags=' + artist )
+
+}
 
 function searchFantiaDiv() {
     
@@ -94,17 +109,20 @@ function searchFanboxLink() {
 }
 
 function searchFanboxLinkFull() {
-    
-    var userLink = document.querySelector( "a[href^='https://www.pixiv.net/users/']" )
-    if ( userLink ) {
-        var match = userLink.href.match( /\d+/ ) 
-        if ( match && match.length > 0 ) {
-            var userId = match[0]
-            var newUrl = kemonoUrl + "/fanbox/user/" + userId
 
-            openInNewTab( newUrl )
-        }
-    }
+    const divElem = document.querySelector('div[style*="fanbox/public/images/user"')
+    if (!divElem || !divElem.style)
+        return
+
+    const bgImageUrl = divElem.style['backgroundImage']
+    
+    var match = bgImageUrl.match( /fanbox\/public\/images\/user\/(\d+)\// )
+    if (!match || match.length < 1)
+        return
+    
+    var userId = match[1]
+    openInNewTab( kemonoUrl + "/fanbox/user/" + userId )
+    
 }
 
 function searchDLSite() {
@@ -118,14 +136,40 @@ function searchDLSite() {
     }
 
 }
-https://gelbooru.com/index.php?page=post&s=view&id=10106480
-////////// Gel to Danbooru wiki //////////
-if ( curTab.match( /gelbooru\.com\/index\.php\?page=post.*&id=(\d+)/ ) || curTab.match( /pixiv\.net(\/en|)\/artworks/ ) ) {
-    
-    console.log( "[LazRedirect][Script] matched pixiv" )
 
-    searchFantiaDiv()
-    searchFanboxLink()
+function searchMisskey() {
+    // https://misskey.art/@meis12495@misskey.io
+    var match = curTab.match( /misskey\.io\/@(\S+)(\/|$)/ )
+    if ( match && match.length > 0 ) {
+        var userName = match[1]
+        
+        openInNewTab( 'https://misskey.art/@' + userName + '@misskey.io' )
+    }
+
+}
+
+////////// misskey.io to misskey.art //////////
+if ( curTab.match( /misskey\.io\/@.*/ ) ) {
+    
+    console.log( "[LazRedirect][Script] matched misskey.io" )
+
+    searchMisskey()
+} 
+
+////////// Gel to Danbooru wiki //////////
+if ( curTab.match( /gelbooru\.com\/index\.php\?page=post.*&id=(\d+)/ ) ) {
+    
+    console.log( "[LazRedirect][Script] matched gelbooru" )
+
+    searchGelDiv()
+} 
+
+////////// Dan to gel search //////////
+if ( curTab.match( /danbooru\.donmai\.us\/artists\/(\d+)/ ) ) {
+    
+    console.log( "[LazRedirect][Script] matched danbooru artist wiki" )
+
+    searchDanWiki()
 } 
 
 ////////// Pixiv to kemono //////////

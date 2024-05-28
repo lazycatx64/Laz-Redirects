@@ -11,6 +11,9 @@
         "*://*.kemono.party/*",
         "*://*.kemono.su/*",
         "*://*.dlsite.com/*",
+        "*://*.gelbooru.com/*",
+        "*://*.donmai.us/*",
+        "*://*.misskey.io/*",
         "*://*.facebook.com/*"
     ],
     "browser_action": {
