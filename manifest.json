@@ -8,12 +8,13 @@
         "*://*.fantia.jp/*",
         "*://*.fanbox.cc/*",
         "*://*.patreon.com/*",
-        "*://*.kemono.party/*",
         "*://*.kemono.su/*",
         "*://*.dlsite.com/*",
         "*://*.gelbooru.com/*",
         "*://*.donmai.us/*",
         "*://*.misskey.io/*",
+        "*://*.x.com/*",
+        "*://*.twitter.com/*",
         "*://*.facebook.com/*"
     ],
     "browser_action": {

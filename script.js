@@ -1,26 +1,37 @@
 
 
-var curTab = window.location.href
+let curTab = window.location.href
 console.log( "[LazRedirect][Script] current url = " + curTab )
 
 // chrome.runtime.sendMessage({ badgeText: '42' })
 
-var kemonoUrl = "https://kemono.su"
+let kemonoUrl = "https://kemono.su"
 
-var fantiaFanclubUrl = /https?:\/\/fantia\.jp\/fanclubs/
-var fantiaPostUrl = /https?:\/\/fantia\.jp\/posts\/\d+/
+let fantiaFanclubUrl = /https?:\/\/fantia\.jp\/fanclubs/
+let fantiaPostUrl = /https?:\/\/fantia\.jp\/posts\/\d+/
 
 
 function openInNewTab( url ) {
 
-    var stackTrace = new Error().stack.split("\n");
-    var callerLine = stackTrace[2].trim(); // 获取调用行
+    let stackTrace = new Error().stack.split("\n");
+    let callerLine = stackTrace[2].trim(); // 获取调用行
     console.log("[LazRedirect][Script] Opening Url: " + url);
     console.log("[LazRedirect][Script] Called from: " + callerLine);
     window.open( url, "_blank" )
 
 }
 
+
+function searchTwitter() {
+    let match = curTab.match( /\/(x|twitter)\.com\/(\w+)(\/|$)/ )
+    if ( !match || match.length < 1 )
+        return
+
+    let userName = match[2]
+        
+    openInNewTab( 'https://danbooru.donmai.us/artists?commit=Search&search[any_name_matches]=' + userName )
+    
+}
 
 function searchGelDiv() {
     
@@ -55,21 +66,21 @@ function searchDanWiki() {
 
 function searchFantiaDiv() {
     
-    var divElements = document.querySelectorAll( "div" )
+    let divElements = document.querySelectorAll( "div" )
 
-    for ( var i = 0; i < divElements.length; i++ ) {
-        var divText = divElements[i].innerText
+    for ( let i = 0; i < divElements.length; i++ ) {
+        let divText = divElements[i].innerText
 
-        var fanclubs = divText.match( fantiaFanclubUrl )
+        let fanclubs = divText.match( fantiaFanclubUrl )
         if ( fanclubs ) {
 
-            var fanclubId = fanclubs[0].match(/\d+/)
+            let fanclubId = fanclubs[0].match(/\d+/)
             fanclubId = kemonoUrl + "/fantia/user/" + fanclubId
             openInNewTab( fanclubId )
             break
         }
         
-        var posts = divText.match( fantiaPostUrl )
+        let posts = divText.match( fantiaPostUrl )
         if ( posts ) {
 
             openInNewTab( posts[0] )
@@ -81,12 +92,12 @@ function searchFantiaDiv() {
 
 function searchFantiaLinkFull() {
     
-    var userLink = document.querySelector( "a[href*='fantia.jp/fanclubs']" )
+    let userLink = document.querySelector( "a[href*='fantia.jp/fanclubs']" )
     if ( userLink ) {
-        var match = userLink.href.match( /\d+/ ) 
+        let match = userLink.href.match( /\d+/ ) 
         if ( match && match.length > 0 ) {
-            var userId = match[0]
-            var newUrl = kemonoUrl + "/fantia/user/" + userId
+            let userId = match[0]
+            let newUrl = kemonoUrl + "/fantia/user/" + userId
 
             openInNewTab( newUrl )
         }
@@ -96,16 +107,45 @@ function searchFantiaLinkFull() {
 
 function searchFanboxLink() {
     
-    var userLink = document.querySelector( "a[href^='/users/'], a[href^='/en/users/']" )
+    let userLink = document.querySelector( "a[href^='/users/'], a[href^='/en/users/']" )
     if ( userLink ) {
-        var match = userLink.href.match( /\d+/ ) 
+        let match = userLink.href.match( /\d+/ ) 
         if ( match && match.length > 0 ) {
-            var userId = match[0]
-            var newUrl = kemonoUrl + "/fanbox/user/" + userId
+            let userId = match[0]
+            let newUrl = kemonoUrl + "/fanbox/user/" + userId
 
             openInNewTab( newUrl )
         }
     }
+}
+
+function searchFanboxPost() {
+    // document.querySelector( "a[href*='fanbox.cc']" ).href.match( /posts\/(\d+)/ )[1]
+
+    const fanboxLink = document.querySelector( "a[href*='fanbox.cc']" )
+    if ( !fanboxLink )
+        return
+
+    const match = fanboxLink.href.match( /posts\/(\d+)/ )
+    if ( !match || match.length < 1 )
+        return
+
+    const postId = match[1]
+
+    
+    const userLink = document.querySelector( "a[href^='/users/'], a[href^='/en/users/']" )
+    if ( !userLink )
+        return
+
+    const match2 = userLink.href.match( /\d+/ )
+    if ( !match2 || match2.length < 1 )
+        return
+
+    const userId = match2[0]
+    const newUrl = kemonoUrl + "/fanbox/user/" + userId + "/post/" + postId
+
+    openInNewTab( newUrl )
+
 }
 
 function searchFanboxLinkFull() {
@@ -116,21 +156,21 @@ function searchFanboxLinkFull() {
 
     const bgImageUrl = divElem.style['backgroundImage']
     
-    var match = bgImageUrl.match( /fanbox\/public\/images\/user\/(\d+)\// )
+    let match = bgImageUrl.match( /fanbox\/public\/images\/user\/(\d+)\// )
     if (!match || match.length < 1)
         return
     
-    var userId = match[1]
+    let userId = match[1]
     openInNewTab( kemonoUrl + "/fanbox/user/" + userId )
     
 }
 
 function searchDLSite() {
     
-    var match = curTab.match( /RG\d+/ )
+    let match = curTab.match( /RG\d+/ )
     if ( match && match.length > 0 ) {
-        var circleId = match[0]
-        var newUrl = kemonoUrl + "/dlsite/user/" + circleId
+        let circleId = match[0]
+        let newUrl = kemonoUrl + "/dlsite/user/" + circleId
 
         openInNewTab( newUrl )
     }
@@ -139,14 +179,22 @@ function searchDLSite() {
 
 function searchMisskey() {
     // https://misskey.art/@meis12495@misskey.io
-    var match = curTab.match( /misskey\.io\/@(\S+)(\/|$)/ )
+    let match = curTab.match( /misskey\.io\/@(\S+)(\/|$)/ )
     if ( match && match.length > 0 ) {
-        var userName = match[1]
+        let userName = match[1]
         
         openInNewTab( 'https://misskey.art/@' + userName + '@misskey.io' )
     }
 
 }
+
+////////// twitter to Danbooru wiki //////////
+if ( curTab.match( /\/(twitter|x)\.com\/[a-zA-Z0-9_-]+/ ) ) {
+    
+    console.log( "[LazRedirect][Script] matched twitter" )
+
+    searchTwitter()
+} 
 
 ////////// misskey.io to misskey.art //////////
 if ( curTab.match( /misskey\.io\/@.*/ ) ) {
@@ -157,7 +205,7 @@ if ( curTab.match( /misskey\.io\/@.*/ ) ) {
 } 
 
 ////////// Gel to Danbooru wiki //////////
-if ( curTab.match( /gelbooru\.com\/index\.php\?page=post.*&id=(\d+)/ ) ) {
+if ( curTab.match( /gelbooru\.com\/index\.php\?(page=post|id=(\d+)).*&(page=post|id=(\d+))/ ) ) {
     
     console.log( "[LazRedirect][Script] matched gelbooru" )
 
@@ -178,6 +226,7 @@ if ( curTab.match( /pixiv\.net(\/en|)\/users/ ) || curTab.match( /pixiv\.net(\/e
     console.log( "[LazRedirect][Script] matched pixiv" )
 
     searchFantiaDiv()
+    searchFanboxPost()
     searchFanboxLink()
 } 
 
@@ -206,18 +255,18 @@ if ( curTab.match( /patreon\.com\/\S+/ ) ) {
 
     console.log( "[LazRedirect][Script] matched patreon" )
     
-    // var match = curTab.match( /\d+/)
+    // let match = curTab.match( /\d+/)
     // if ( match && match.length > 0 ) {
-    //     var userId = match[0]
-    //     var newUrl = kemonoUrl + "/patreon/user/" + userId
+    //     let userId = match[0]
+    //     let newUrl = kemonoUrl + "/patreon/user/" + userId
 
     //     openInNewTab( newUrl )
     // }
 
-    var match = document.querySelector( 'script#__NEXT_DATA__' ).innerText.match( /\/api\/user\/(\d+)/ )
+    let match = document.querySelector( 'script#__NEXT_DATA__' ).innerText.match( /\/api\/user\/(\d+)/ )
     if ( match && match.length > 0 ) {
-        var userId = match[1]
-        var newUrl = kemonoUrl + "/patreon/user/" + userId
+        let userId = match[1]
+        let newUrl = kemonoUrl + "/patreon/user/" + userId
         
         openInNewTab( newUrl )
 
@@ -230,12 +279,12 @@ if ( curTab.match( /fantia\.jp\/(fanclubs|posts)\/\d+/ ) || curTab.match( /fanti
     
     console.log( "[LazRedirect][Script] matched fantia" )
 
-    var userLink = document.querySelector( "a[href^='/fanclubs/']" )
+    let userLink = document.querySelector( "a[href^='/fanclubs/']" )
     if ( userLink ) {
-        var match = userLink.href.match( /\d+/ )
+        let match = userLink.href.match( /\d+/ )
         if ( match && match.length > 0 ) {
-            var userId = match[0]
-            var newUrl = kemonoUrl + "/fantia/user/" + userId
+            let userId = match[0]
+            let newUrl = kemonoUrl + "/fantia/user/" + userId
 
             openInNewTab( newUrl )
         }
@@ -249,54 +298,45 @@ if ( curTab.match( /fantia\.jp\/(fanclubs|posts)\/\d+/ ) || curTab.match( /fanti
 if ( curTab.match( /facebook\.com/ ) ) {
     
     console.log( "[LazRedirect][Script] matched facebook: " + curTab )
-
+    let userId
 
     // 社團成員
     if ( curTab.match( /facebook\.com\/groups\/\d+\/user\/\d+/ ) ) {
         console.log( "[LazRedirect][Script] group user /facebook\.com\/groups\/\d+\/user\/d+/" )
+        userId = curTab.match( /groups\/\d+\/user\/(\d+)/ )[1]
 
-        var userId = curTab.match( /groups\/\d+\/user\/(\d+)/ )[1]
-        if ( userId && userId.length > 1 ) {
-            
-            var newUrl = "https://facebook.com/profile/" + userId + "/search/?q=檢舉"
-
-            openInNewTab( newUrl )
-        }
+    } else if ( curTab.match( /facebook\.com\/story\.php.*(\?|&)id/ ) ) {
+        console.log( "[LazRedirect][Script] /facebook\.com\/profile\.php\?id/" )
+        userId = curTab.match( /story\.php.*(\?|&)id\=(\d+)/ )[2]
 
     } else if ( curTab.match( /facebook\.com\/profile\.php\?id/ ) ) {
         console.log( "[LazRedirect][Script] /facebook\.com\/profile\.php\?id/" )
-    
-        var userId = curTab.match( /profile\.php\?id\=(\d+)/ )[1]
-        if ( userId && userId.length > 1 ) {
-            
-            var newUrl = "https://facebook.com/profile/" + userId + "/search/?q=檢舉"
-
-            openInNewTab( newUrl )
-        }
+        userId = curTab.match( /profile\.php\?id\=(\d+)/ )[1]
 
     } else if ( curTab.match( /facebook\.com\/[a-zA-Z0-9_\.]+$/ ) ) {
         console.log( "[LazRedirect][Script] /facebook\.com\/[a-zA-Z0-9_\.]+$/" )
-        var userId = curTab.match( /facebook\.com\/([a-zA-Z0-9_\.]+)$/ )[1]
-        if ( userId && userId.length > 1 ) {
-            
-            var newUrl = "https://facebook.com/profile/" + userId + "/search/?q=檢舉"
-
-            openInNewTab( newUrl )
-        }
+        userId = curTab.match( /facebook\.com\/([a-zA-Z0-9_\.]+)$/ )[1]
 
     } else {
-        var userLink = document.querySelector( "a[href^='/photo/?fbid=']" )
+        let userLink = document.querySelector( "a[href^='/photo/?fbid=']" )
         console.log( "[LazRedirect][Script] a[href^='/photo/?fbid=']" )
         if ( userLink ) {
-            var match = userLink.href.match( /ecnf.(\d+)/ )
+            let match = userLink.href.match( /ecnf.(\d+)/ )
             if ( match && match.length > 1 ) {
-                var userId = match[1]
-                var newUrl = "https://facebook.com/profile/" + userId + "/search/?q=檢舉"
+                let userId = match[1]
+                let newUrl = "https://facebook.com/profile/" + userId + "/search/?q=."
     
                 openInNewTab( newUrl )
             }
         }
 
+    }
+
+    if ( userId && userId.length > 1 ) {
+        
+        let newUrl = "https://facebook.com/profile/" + userId + "/search/?q=."
+
+        openInNewTab( newUrl )
     }
 } 
 
