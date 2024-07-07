@@ -1,14 +1,14 @@
 
 
-let curTab = window.location.href
+var curTab = window.location.href
 console.log( "[LazRedirect][Script] current url = " + curTab )
 
 // chrome.runtime.sendMessage({ badgeText: '42' })
 
-let kemonoUrl = "https://kemono.su"
+var kemonoUrl = "https://kemono.su"
 
-let fantiaFanclubUrl = /https?:\/\/fantia\.jp\/fanclubs/
-let fantiaPostUrl = /https?:\/\/fantia\.jp\/posts\/\d+/
+var fantiaFanclubUrl = /https?:\/\/fantia\.jp\/fanclubs/
+var fantiaPostUrl = /https?:\/\/fantia\.jp\/posts\/\d+/
 
 
 function openInNewTab( url ) {
@@ -255,22 +255,23 @@ else if ( curTab.match( /patreon\.com\/\S+/ ) ) {
 
     console.log( "[LazRedirect][Script] matched patreon" )
     
-    // let match = curTab.match( /\d+/)
+    // let match = document.querySelector( 'script#__NEXT_DATA__' ).innerText.match( /\/api\/user\/(\d+)/ )
     // if ( match && match.length > 0 ) {
-    //     let userId = match[0]
+    //     console.log( "[LazRedirect][Script] matched patreon1" )
+    //     let userId = match[1]
     //     let newUrl = kemonoUrl + "/patreon/user/" + userId
-
     //     openInNewTab( newUrl )
+    // } else {
+        let match = curTab.match( /patreon\.com\/user\?u=(\d+)/ )
+        console.log( "[LazRedirect][Script] matched patreon2" )
+        if ( match && match.length > 1 ) {
+            console.log( "[LazRedirect][Script] matched patreon3" )
+            let userId = match[1]
+            let newUrl = kemonoUrl + "/patreon/user/" + userId
+    
+            openInNewTab( newUrl )
+        }
     // }
-
-    let match = document.querySelector( 'script#__NEXT_DATA__' ).innerText.match( /\/api\/user\/(\d+)/ )
-    if ( match && match.length > 0 ) {
-        let userId = match[1]
-        let newUrl = kemonoUrl + "/patreon/user/" + userId
-        
-        openInNewTab( newUrl )
-
-    }
 
 } 
 
