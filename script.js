@@ -197,7 +197,7 @@ if ( curTab.match( /\/(twitter|x)\.com\/[a-zA-Z0-9_-]+/ ) ) {
 } 
 
 ////////// misskey.io to misskey.art //////////
-if ( curTab.match( /misskey\.io\/@.*/ ) ) {
+else if ( curTab.match( /misskey\.io\/@.*/ ) ) {
     
     console.log( "[LazRedirect][Script] matched misskey.io" )
 
@@ -205,7 +205,7 @@ if ( curTab.match( /misskey\.io\/@.*/ ) ) {
 } 
 
 ////////// Gel to Danbooru wiki //////////
-if ( curTab.match( /gelbooru\.com\/index\.php\?(page=post|id=(\d+)).*&(page=post|id=(\d+))/ ) ) {
+else if ( curTab.match( /gelbooru\.com\/index\.php\?(page=post|id=(\d+)).*&(page=post|id=(\d+))/ ) ) {
     
     console.log( "[LazRedirect][Script] matched gelbooru" )
 
@@ -213,7 +213,7 @@ if ( curTab.match( /gelbooru\.com\/index\.php\?(page=post|id=(\d+)).*&(page=post
 } 
 
 ////////// Dan to gel search //////////
-if ( curTab.match( /danbooru\.donmai\.us\/artists\/(\d+)/ ) ) {
+else if ( curTab.match( /danbooru\.donmai\.us\/artists\/(\d+)/ ) ) {
     
     console.log( "[LazRedirect][Script] matched danbooru artist wiki" )
 
@@ -221,7 +221,7 @@ if ( curTab.match( /danbooru\.donmai\.us\/artists\/(\d+)/ ) ) {
 } 
 
 ////////// Pixiv to kemono //////////
-if ( curTab.match( /pixiv\.net(\/en|)\/users/ ) || curTab.match( /pixiv\.net(\/en|)\/artworks/ ) ) {
+else if ( curTab.match( /pixiv\.net(\/\w{2}|)\/users/ ) || curTab.match( /pixiv\.net(\/\w{2}|)\/artworks/ ) ) {
     
     console.log( "[LazRedirect][Script] matched pixiv" )
 
@@ -231,7 +231,7 @@ if ( curTab.match( /pixiv\.net(\/en|)\/users/ ) || curTab.match( /pixiv\.net(\/e
 } 
 
 ////////// Fanbox to kemono //////////
-if ( curTab.match( /\S+\.fanbox\.cc/ ) ) {
+else if ( curTab.match( /\S+\.fanbox\.cc/ ) ) {
     
     console.log( "[LazRedirect][Script] matched fanbox" )
 
@@ -242,7 +242,7 @@ if ( curTab.match( /\S+\.fanbox\.cc/ ) ) {
 
 
 ////////// DLsite circle to kemono //////////
-if ( curTab.match( /dlsite\.com\/.*\/maker_id\/RG\d+/ ) ) {
+else if ( curTab.match( /dlsite\.com\/.*\/maker_id\/RG\d+/ ) ) {
 
     console.log( "[LazRedirect][Script] matched dlsite" )
 
@@ -251,7 +251,7 @@ if ( curTab.match( /dlsite\.com\/.*\/maker_id\/RG\d+/ ) ) {
 } 
 
 ////////// Patreon to kemono //////////
-if ( curTab.match( /patreon\.com\/\S+/ ) ) {
+else if ( curTab.match( /patreon\.com\/\S+/ ) ) {
 
     console.log( "[LazRedirect][Script] matched patreon" )
     
@@ -275,7 +275,7 @@ if ( curTab.match( /patreon\.com\/\S+/ ) ) {
 } 
 
 ////////// Fantia to Pixiv //////////
-if ( curTab.match( /fantia\.jp\/(fanclubs|posts)\/\d+/ ) || curTab.match( /fantia\.jp\/\S+(\/|)/ ) ) {
+else if ( curTab.match( /fantia\.jp\/(fanclubs|posts)\/\d+/ ) || curTab.match( /fantia\.jp\/\S+(\/|)/ ) ) {
     
     console.log( "[LazRedirect][Script] matched fantia" )
 
@@ -295,7 +295,7 @@ if ( curTab.match( /fantia\.jp\/(fanclubs|posts)\/\d+/ ) || curTab.match( /fanti
 } 
 
 ////////// Facebook user to post search //////////
-if ( curTab.match( /facebook\.com/ ) ) {
+else if ( curTab.match( /facebook\.com/ ) ) {
     
     console.log( "[LazRedirect][Script] matched facebook: " + curTab )
     let userId

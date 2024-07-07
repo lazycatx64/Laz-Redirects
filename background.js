@@ -1,7 +1,7 @@
 
 console.log( "[LazRedirect][Background] Background script!" );
 
-chrome.browserAction.setBadgeText({ text: 'nom' });
+chrome.browserAction.setBadgeText({ text: 'laz' });
 
 chrome.browserAction.onClicked.addListener( function( tab ) {
 
