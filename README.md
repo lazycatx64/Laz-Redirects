@@ -7,6 +7,8 @@
 
 我在A網站看到某繪師資訊, 要在B網站找跟他相關的東西, 就必須複製繪師名字, 然後再一連串的搜尋, 而且B網站C網站也不見得是用繪師名字, 有可能是繪師帳號, 繪師id, 我覺得太麻煩, 於是就有了這個擴充.
 
+我不會把它上架到擴充商店, 所以不會有自動更新
+
 ## 怎麼裝?
 
 1. Chromium的瀏覽器應該都能用(Edge, Chrome, Brave, Vivaldi...)
@@ -25,6 +27,7 @@
 
 ## 目前支援的網站
 ### Kemono
+如果點開發現只有連到Kemono首頁, 代表那個繪師沒開付費站, 或者沒人把它放流到Kemono
 - Pixiv
   - 繪師首頁(pixiv.net/users/xxxxxx) > Kemono Fanbox
   - 作品頁面(pixiv.net/artworks/xxxxxx) > Kemono Fanbox
