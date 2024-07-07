@@ -250,29 +250,38 @@ else if ( curTab.match( /dlsite\.com\/.*\/maker_id\/RG\d+/ ) ) {
 
 } 
 
-////////// Patreon to kemono //////////
-else if ( curTab.match( /patreon\.com\/\S+/ ) ) {
+////////// Patreon id to kemono //////////
+else if ( curTab.match( /patreon\.com\/user\?u=(\d+)/ ) ) {
+    let match = curTab.match( /patreon\.com\/user\?u=(\d+)/ )
+    if ( match && match.length > 0 ) {
+        console.log( "[LazRedirect][Script] /patreon\.com\/user\?u=(\d+)/" )
+        let userId = match[1]
+        let newUrl = kemonoUrl + "/patreon/user/" + userId
 
+        openInNewTab( newUrl )
+    }
+}
+
+////////// Patreon name to kemono //////////
+else if ( curTab.match( /patreon\.com\/\S+/ ) ) {
     console.log( "[LazRedirect][Script] matched patreon" )
     
-    // let match = document.querySelector( 'script#__NEXT_DATA__' ).innerText.match( /\/api\/user\/(\d+)/ )
-    // if ( match && match.length > 0 ) {
-    //     console.log( "[LazRedirect][Script] matched patreon1" )
-    //     let userId = match[1]
-    //     let newUrl = kemonoUrl + "/patreon/user/" + userId
-    //     openInNewTab( newUrl )
-    // } else {
-        let match = curTab.match( /patreon\.com\/user\?u=(\d+)/ )
-        console.log( "[LazRedirect][Script] matched patreon2" )
-        if ( match && match.length > 1 ) {
-            console.log( "[LazRedirect][Script] matched patreon3" )
-            let userId = match[1]
-            let newUrl = kemonoUrl + "/patreon/user/" + userId
-    
-            openInNewTab( newUrl )
-        }
-    // }
+    const matches = document.querySelector( 'script#__NEXT_DATA__' ).innerText.matchAll( /\/api\/user\/(\d+)/mg )
+    const selfId = document.querySelector( 'button[data-tag="account-menu-toggle-switcher"]' ).querySelector('img').src.match( /patreonusercontent.com\/\d\/patreon-media\/p\/user\/(\d+)/ )[1]
+    if ( matches ) {
+        console.log( "[LazRedirect][Script] __NEXT_DATA__" )
 
+        for ( const match of matches ) {
+            const userId = match[1]
+            if ( selfId != userId ) {
+                console.log( "[LazRedirect][Script] selfId != userId" )
+                let newUrl = kemonoUrl + "/patreon/user/" + userId
+                openInNewTab( newUrl )
+                break
+            }
+        }
+
+    }
 } 
 
 ////////// Fantia to Pixiv //////////
