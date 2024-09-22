@@ -1,5 +1,5 @@
 
-const manifestData = chrome.runtime.getManifest();
+var manifestData = chrome.runtime.getManifest();
 console.log( "[LazRedirect][Script] Current Version = ", manifestData.version )
 
 var curTab = window.location.href
